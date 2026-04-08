@@ -1,0 +1,1961 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EcoFit — Know Your Wardrobe's Impact</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>"
+        />
+        <style>
+            /* === Hero === */
+            .hero {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                padding: 120px 48px 80px;
+                max-width: 1280px;
+                margin: 0 auto;
+                position: relative;
+                gap: 80px;
+            }
+
+            .hero-content {
+                flex: 1;
+            }
+            .hero-visual {
+                flex: 1;
+                position: relative;
+            }
+
+            .hero-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(172, 224, 201, 0.3);
+                border: 1px solid rgba(172, 224, 201, 0.6);
+                border-radius: 999px;
+                padding: 6px 16px 6px 8px;
+                margin-bottom: 28px;
+                animation: eyebrowIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            @keyframes eyebrowIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-20px) scale(0.9);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0) scale(1);
+                }
+            }
+
+            .eyebrow-dot {
+                width: 28px;
+                height: 28px;
+                background: linear-gradient(
+                    135deg,
+                    var(--celadon-400),
+                    var(--celadon-600)
+                );
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+            }
+
+            .eyebrow-text {
+                font-family: "Space Mono", monospace;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: var(--celadon-700);
+            }
+
+            .hero-title {
+                font-family: "Playfair Display", serif;
+                font-size: clamp(44px, 6vw, 76px);
+                font-weight: 900;
+                line-height: 1.05;
+                color: var(--text-dark);
+                letter-spacing: -2px;
+                margin-bottom: 24px;
+                animation: titleIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+            }
+
+            @keyframes titleIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .hero-title .highlight {
+                position: relative;
+                color: var(--celadon-500);
+                display: inline-block;
+            }
+
+            .hero-title .highlight::after {
+                content: "";
+                position: absolute;
+                bottom: 4px;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(
+                    90deg,
+                    var(--celadon-300),
+                    var(--mint)
+                );
+                border-radius: 3px;
+                opacity: 0.5;
+                z-index: -1;
+            }
+
+            .hero-desc {
+                font-size: 18px;
+                color: var(--text-light);
+                line-height: 1.7;
+                max-width: 480px;
+                margin-bottom: 40px;
+                animation: titleIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
+            }
+
+            .hero-actions {
+                display: flex;
+                gap: 14px;
+                flex-wrap: wrap;
+                animation: titleIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
+            }
+
+            .hero-stats {
+                display: flex;
+                gap: 40px;
+                margin-top: 56px;
+                padding-top: 40px;
+                border-top: 1px solid rgba(172, 224, 201, 0.4);
+                animation: titleIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.65s both;
+            }
+
+            .hero-stat-num {
+                font-family: "Playfair Display", serif;
+                font-size: 32px;
+                font-weight: 900;
+                color: var(--celadon-600);
+                display: block;
+            }
+
+            .hero-stat-label {
+                font-size: 12px;
+                color: var(--text-light);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            /* === Visual Card Stack === */
+            .hero-visual-inner {
+                position: relative;
+                height: 520px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .visual-card {
+                position: absolute;
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(172, 224, 201, 0.5);
+                border-radius: 24px;
+                padding: 24px;
+                box-shadow: var(--shadow-lg);
+                transition: var(--spring);
+            }
+
+            .visual-card-main {
+                width: 320px;
+                z-index: 3;
+                animation: cardFloat 6s ease-in-out infinite;
+            }
+
+            @keyframes cardFloat {
+                0%,
+                100% {
+                    transform: translateY(0) rotate(-1deg);
+                }
+                50% {
+                    transform: translateY(-12px) rotate(0.5deg);
+                }
+            }
+
+            .visual-card-2 {
+                width: 240px;
+                top: 20px;
+                right: -30px;
+                z-index: 2;
+                transform: rotate(6deg);
+                animation: cardFloat2 7s ease-in-out infinite 1s;
+            }
+
+            @keyframes cardFloat2 {
+                0%,
+                100% {
+                    transform: rotate(6deg) translateY(0);
+                }
+                50% {
+                    transform: rotate(4deg) translateY(-8px);
+                }
+            }
+
+            .visual-card-3 {
+                width: 200px;
+                bottom: 40px;
+                left: -20px;
+                z-index: 1;
+                transform: rotate(-4deg);
+                animation: cardFloat3 8s ease-in-out infinite 2s;
+            }
+
+            @keyframes cardFloat3 {
+                0%,
+                100% {
+                    transform: rotate(-4deg) translateY(0);
+                }
+                50% {
+                    transform: rotate(-2deg) translateY(-10px);
+                }
+            }
+
+            .vcard-title {
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--text-light);
+                margin-bottom: 12px;
+            }
+
+            .vcard-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 0;
+                border-bottom: 1px solid rgba(172, 224, 201, 0.3);
+            }
+
+            .vcard-item:last-child {
+                border: none;
+            }
+
+            .vcard-icon {
+                width: 36px;
+                height: 36px;
+                background: linear-gradient(
+                    135deg,
+                    var(--celadon-200),
+                    var(--celadon-300)
+                );
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                flex-shrink: 0;
+            }
+
+            .vcard-info {
+                flex: 1;
+            }
+
+            .vcard-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-dark);
+            }
+
+            .vcard-score-bar {
+                height: 5px;
+                border-radius: 3px;
+                margin-top: 5px;
+                background: rgba(172, 224, 201, 0.2);
+            }
+
+            .vcard-score-fill {
+                height: 100%;
+                border-radius: 3px;
+            }
+
+            .vcard-score-text {
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--celadon-600);
+            }
+
+            /* === Features === */
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+                margin-top: 0;
+            }
+
+            .feature-card {
+                padding: 36px 28px;
+                background: rgba(255, 255, 255, 0.65);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(172, 224, 201, 0.4);
+                border-radius: 24px;
+                box-shadow: var(--shadow-sm);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                cursor: default;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .feature-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    135deg,
+                    rgba(172, 224, 201, 0.1),
+                    transparent
+                );
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .feature-card:hover {
+                transform: translateY(-8px) scale(1.01);
+                box-shadow: var(--shadow-lg);
+                border-color: rgba(172, 224, 201, 0.7);
+            }
+
+            .feature-card:hover::before {
+                opacity: 1;
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                border-radius: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                margin-bottom: 20px;
+                position: relative;
+            }
+
+            .fi-1 {
+                background: linear-gradient(135deg, #d6f0e4, #ace0c9);
+            }
+            .fi-2 {
+                background: linear-gradient(135deg, #fdefd1, #f5dfa3);
+            }
+            .fi-3 {
+                background: linear-gradient(135deg, #d1e8fd, #a3cff5);
+            }
+            .fi-4 {
+                background: linear-gradient(135deg, #f5d1f5, #e9a3f5);
+            }
+            .fi-5 {
+                background: linear-gradient(135deg, #d1f5e8, #a3f5cc);
+            }
+            .fi-6 {
+                background: linear-gradient(135deg, #f5e4d1, #f5c9a3);
+            }
+
+            .feature-card h3 {
+                font-family: "Playfair Display", serif;
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 10px;
+            }
+
+            .feature-card p {
+                font-size: 14px;
+                color: var(--text-light);
+                line-height: 1.65;
+            }
+
+            .feature-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--celadon-600);
+                text-decoration: none;
+                margin-top: 16px;
+                transition: var(--transition);
+            }
+
+            .feature-link:hover {
+                gap: 10px;
+                color: var(--celadon-500);
+            }
+
+            /* === How It Works === */
+            .steps-timeline {
+                position: relative;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 32px;
+                padding-top: 40px;
+            }
+
+            .steps-timeline::before {
+                content: "";
+                position: absolute;
+                top: 56px;
+                left: 12.5%;
+                right: 12.5%;
+                height: 2px;
+                background: linear-gradient(
+                    90deg,
+                    var(--celadon-300),
+                    var(--celadon-200),
+                    var(--celadon-300)
+                );
+                border-radius: 1px;
+            }
+
+            .step {
+                text-align: center;
+                position: relative;
+            }
+
+            .step-num {
+                width: 52px;
+                height: 52px;
+                background: linear-gradient(
+                    135deg,
+                    var(--celadon-500),
+                    var(--celadon-700)
+                );
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: "Space Mono", monospace;
+                font-size: 18px;
+                font-weight: 700;
+                margin: 0 auto 20px;
+                box-shadow: 0 6px 20px rgba(46, 154, 121, 0.4);
+                position: relative;
+                z-index: 1;
+            }
+
+            .step h3 {
+                font-family: "Playfair Display", serif;
+                font-size: 18px;
+                font-weight: 700;
+                margin-bottom: 8px;
+                color: var(--text-dark);
+            }
+
+            .step p {
+                font-size: 14px;
+                color: var(--text-light);
+                line-height: 1.6;
+            }
+
+            /* === CTA Banner === */
+            .cta-banner {
+                background: linear-gradient(
+                    135deg,
+                    var(--celadon-700),
+                    var(--celadon-900)
+                );
+                border-radius: 32px;
+                padding: 72px 64px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                margin: 40px 0 0;
+            }
+
+            .cta-banner::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background:
+                    radial-gradient(
+                        ellipse 60% 80% at 20% 50%,
+                        rgba(172, 224, 201, 0.12) 0%,
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        ellipse 40% 60% at 80% 30%,
+                        rgba(79, 180, 146, 0.1) 0%,
+                        transparent 50%
+                    );
+            }
+
+            .cta-banner-content {
+                position: relative;
+                z-index: 1;
+            }
+
+            .cta-banner h2 {
+                font-family: "Playfair Display", serif;
+                font-size: clamp(28px, 4vw, 44px);
+                font-weight: 700;
+                color: white;
+                margin-bottom: 16px;
+                letter-spacing: -1px;
+            }
+
+            .cta-banner p {
+                font-size: 17px;
+                color: rgba(255, 255, 255, 0.65);
+                max-width: 480px;
+                margin: 0 auto 36px;
+                line-height: 1.7;
+            }
+
+            /* === Testimonials === */
+            .testimonials-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+
+            .testimonial {
+                background: rgba(255, 255, 255, 0.65);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(172, 224, 201, 0.4);
+                border-radius: 20px;
+                padding: 28px;
+                box-shadow: var(--shadow-sm);
+                transition: var(--spring);
+            }
+
+            .testimonial:hover {
+                transform: translateY(-6px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .testimonial-stars {
+                color: var(--accent);
+                font-size: 14px;
+                letter-spacing: 2px;
+                margin-bottom: 14px;
+            }
+
+            .testimonial p {
+                font-size: 14px;
+                color: var(--text-mid);
+                line-height: 1.7;
+                font-style: italic;
+                margin-bottom: 20px;
+            }
+
+            .testimonial-author {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .author-avatar {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(
+                    135deg,
+                    var(--celadon-200),
+                    var(--celadon-300)
+                );
+            }
+
+            .author-name {
+                font-weight: 600;
+                font-size: 14px;
+                color: var(--text-dark);
+            }
+
+            .author-role {
+                font-size: 12px;
+                color: var(--text-light);
+            }
+
+            @media (max-width: 1024px) {
+                .hero {
+                    flex-direction: column;
+                    gap: 40px;
+                    padding: 120px 32px 60px;
+                }
+                .hero-visual {
+                    display: none;
+                }
+                .features-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .steps-timeline {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .steps-timeline::before {
+                    display: none;
+                }
+                .testimonials-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .hero {
+                    padding: 100px 20px 60px;
+                }
+                .features-grid,
+                .testimonials-grid {
+                    grid-template-columns: 1fr;
+                }
+                .hero-stats {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                .cta-banner {
+                    padding: 48px 28px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-bg"></div>
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">
+                <div class="nav-logo-icon">🌿</div>
+                <span class="nav-logo-text">Eco<span>Fit</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="calculator.html">Calculator</a></li>
+                <li><a href="wardrobe.html">My Wardrobe</a></li>
+                <li><a href="materials.html">Materials</a></li>
+                <li><a href="tips.html">Eco Tips</a></li>
+                <li>
+                    <a href="calculator.html" class="nav-cta"
+                        >Start Assessing →</a
+                    >
+                </li>
+            </ul>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </nav>
+
+        <!-- HERO -->
+        <section class="hero page-transition">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <div class="eyebrow-dot">🌍</div>
+                    <span class="eyebrow-text"
+                        >Environmental Fashion Tracker</span
+                    >
+                </div>
+
+                <h1 class="hero-title">
+                    Fashion that<br />
+                    <span class="highlight">respects</span><br />
+                    the planet.
+                </h1>
+
+                <p class="hero-desc">
+                    Discover the environmental cost of your clothing choices.
+                    Assess water usage, carbon emissions, and toxicity — then
+                    make better decisions for a greener wardrobe.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="calculator.html" class="btn btn-primary btn-lg">
+                        🔍 Assess My Clothes
+                    </a>
+                    <a href="materials.html" class="btn btn-secondary btn-lg">
+                        📖 Explore Materials
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div>
+                        <span class="hero-stat-num" id="stat-co2">93B</span>
+                        <span class="hero-stat-label"
+                            >Tonnes CO₂/year by fashion</span
+                        >
+                    </div>
+                    <div>
+                        <span class="hero-stat-num">10K</span>
+                        <span class="hero-stat-label"
+                            >Litres per cotton shirt</span
+                        >
+                    </div>
+                    <div>
+                        <span class="hero-stat-num">85%</span>
+                        <span class="hero-stat-label"
+                            >Of clothes end up in landfill</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-visual-inner">
+                    <!-- Floating Card 3 -->
+                    <div class="visual-card visual-card-3">
+                        <div class="vcard-title">🌱 Best Picks</div>
+                        <div class="vcard-item">
+                            <div class="vcard-icon">🌿</div>
+                            <div class="vcard-info">
+                                <div class="vcard-name">Hemp</div>
+                                <div class="vcard-score-bar">
+                                    <div
+                                        class="vcard-score-fill"
+                                        style="
+                                            width: 12%;
+                                            background: var(--good);
+                                        "
+                                    ></div>
+                                </div>
+                            </div>
+                            <span class="vcard-score-text">12</span>
+                        </div>
+                        <div class="vcard-item">
+                            <div class="vcard-icon">🪨</div>
+                            <div class="vcard-info">
+                                <div class="vcard-name">Cork</div>
+                                <div class="vcard-score-bar">
+                                    <div
+                                        class="vcard-score-fill"
+                                        style="
+                                            width: 8%;
+                                            background: var(--good);
+                                        "
+                                    ></div>
+                                </div>
+                            </div>
+                            <span class="vcard-score-text">8</span>
+                        </div>
+                    </div>
+
+                    <!-- Floating Card 2 -->
+                    <div class="visual-card visual-card-2">
+                        <div class="vcard-title">⚡ Impact Score</div>
+                        <div style="text-align: center; padding: 12px 0">
+                            <div
+                                style="
+                                    font-family:
+                                        &quot;Playfair Display&quot;, serif;
+                                    font-size: 56px;
+                                    font-weight: 900;
+                                    color: var(--celadon-500);
+                                "
+                            >
+                                42
+                            </div>
+                            <div
+                                style="
+                                    font-size: 12px;
+                                    color: var(--text-light);
+                                    margin-top: 4px;
+                                "
+                            >
+                                Medium Impact
+                            </div>
+                        </div>
+                        <div class="impact-meter">
+                            <div
+                                class="impact-meter-fill impact-medium"
+                                style="width: 42%"
+                            ></div>
+                        </div>
+                    </div>
+
+                    <!-- Main Visual Card -->
+                    <div class="visual-card visual-card-main">
+                        <div class="vcard-title">📊 Wardrobe Analysis</div>
+                        <div class="vcard-item">
+                            <div class="vcard-icon">👕</div>
+                            <div class="vcard-info">
+                                <div class="vcard-name">Organic Cotton Tee</div>
+                                <div class="vcard-score-bar">
+                                    <div
+                                        class="vcard-score-fill"
+                                        style="
+                                            width: 35%;
+                                            background: var(--good);
+                                        "
+                                    ></div>
+                                </div>
+                            </div>
+                            <span
+                                class="vcard-score-text"
+                                style="color: var(--good)"
+                                >35</span
+                            >
+                        </div>
+                        <div class="vcard-item">
+                            <div class="vcard-icon">👖</div>
+                            <div class="vcard-info">
+                                <div class="vcard-name">Polyester Jeans</div>
+                                <div class="vcard-score-bar">
+                                    <div
+                                        class="vcard-score-fill"
+                                        style="
+                                            width: 78%;
+                                            background: var(--danger);
+                                        "
+                                    ></div>
+                                </div>
+                            </div>
+                            <span
+                                class="vcard-score-text"
+                                style="color: var(--danger)"
+                                >78</span
+                            >
+                        </div>
+                        <div class="vcard-item">
+                            <div class="vcard-icon">🧥</div>
+                            <div class="vcard-info">
+                                <div class="vcard-name">
+                                    Recycled Wool Jacket
+                                </div>
+                                <div class="vcard-score-bar">
+                                    <div
+                                        class="vcard-score-fill"
+                                        style="
+                                            width: 18%;
+                                            background: var(--good);
+                                        "
+                                    ></div>
+                                </div>
+                            </div>
+                            <span
+                                class="vcard-score-text"
+                                style="color: var(--good)"
+                                >18</span
+                            >
+                        </div>
+                        <div class="vcard-item">
+                            <div class="vcard-icon">👟</div>
+                            <div class="vcard-info">
+                                <div class="vcard-name">Leather Sneakers</div>
+                                <div class="vcard-score-bar">
+                                    <div
+                                        class="vcard-score-fill"
+                                        style="
+                                            width: 88%;
+                                            background: var(--danger);
+                                        "
+                                    ></div>
+                                </div>
+                            </div>
+                            <span
+                                class="vcard-score-text"
+                                style="color: var(--danger)"
+                                >88</span
+                            >
+                        </div>
+                        <div
+                            style="
+                                margin-top: 16px;
+                                padding-top: 14px;
+                                border-top: 1px solid rgba(172, 224, 201, 0.4);
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            "
+                        >
+                            <span
+                                style="
+                                    font-size: 13px;
+                                    color: var(--text-light);
+                                "
+                                >Avg Score</span
+                            >
+                            <span
+                                style="
+                                    font-family:
+                                        &quot;Space Mono&quot;, monospace;
+                                    font-size: 20px;
+                                    font-weight: 700;
+                                    color: var(--warn);
+                                "
+                                >55</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS BANNER -->
+        <div class="section-sm">
+            <div class="grid-4 fade-up">
+                <div class="stat-card stagger-1">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Materials Tracked</div>
+                </div>
+                <div class="stat-card stagger-2">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Impact Dimensions</div>
+                </div>
+                <div class="stat-card stagger-3">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Eco Alternatives</div>
+                </div>
+                <div class="stat-card stagger-4">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Free to Use</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <section class="section">
+            <div class="section-header fade-up">
+                <span class="section-tag">✨ Features</span>
+                <h2 class="section-title">
+                    Everything you need to<br /><em>dress sustainably</em>
+                </h2>
+                <p class="section-subtitle">
+                    A complete toolkit to understand, track, and reduce the
+                    environmental footprint of your wardrobe.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-up stagger-1">
+                    <div class="feature-icon fi-1">🔍</div>
+                    <h3>Impact Calculator</h3>
+                    <p>
+                        Score any garment by material, origin, certification and
+                        care habits. Get an instant environmental impact
+                        breakdown.
+                    </p>
+                    <a href="calculator.html" class="feature-link"
+                        >Try Calculator →</a
+                    >
+                </div>
+                <div class="feature-card fade-up stagger-2">
+                    <div class="feature-icon fi-2">👗</div>
+                    <h3>Wardrobe Tracker</h3>
+                    <p>
+                        Build your full digital wardrobe and see your total
+                        footprint at a glance. Track improvement over time.
+                    </p>
+                    <a href="wardrobe.html" class="feature-link"
+                        >My Wardrobe →</a
+                    >
+                </div>
+                <div class="feature-card fade-up stagger-3">
+                    <div class="feature-icon fi-3">📋</div>
+                    <h3>Materials Library</h3>
+                    <p>
+                        Explore 18+ fabrics and materials ranked by CO₂, water
+                        use, and toxicity with sustainable alternatives.
+                    </p>
+                    <a href="materials.html" class="feature-link"
+                        >Explore Library →</a
+                    >
+                </div>
+                <div class="feature-card fade-up stagger-4">
+                    <div class="feature-icon fi-4">💡</div>
+                    <h3>Eco Tips Engine</h3>
+                    <p>
+                        Personalised advice based on your wardrobe data — from
+                        washing habits to brand choices.
+                    </p>
+                    <a href="tips.html" class="feature-link">Get Tips →</a>
+                </div>
+                <div class="feature-card fade-up stagger-5">
+                    <div class="feature-icon fi-5">📊</div>
+                    <h3>Comparison Tool</h3>
+                    <p>
+                        Compare two items side by side — see which is truly
+                        greener with detailed metrics.
+                    </p>
+                    <a href="calculator.html#compare" class="feature-link"
+                        >Compare Items →</a
+                    >
+                </div>
+                <div class="feature-card fade-up stagger-1">
+                    <div class="feature-icon fi-6">🏆</div>
+                    <h3>Certifications Guide</h3>
+                    <p>
+                        Understand what GOTS, OEKO-TEX, Fair Trade and more
+                        really mean for environmental impact.
+                    </p>
+                    <a href="tips.html#certifications" class="feature-link"
+                        >Learn More →</a
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="section" style="padding-top: 0">
+            <div class="section-header fade-up">
+                <span class="section-tag">⚙️ Process</span>
+                <h2 class="section-title">How <em>EcoFit</em> works</h2>
+            </div>
+
+            <div class="steps-timeline">
+                <div class="step fade-up stagger-1">
+                    <div class="step-num">01</div>
+                    <h3>Select Material</h3>
+                    <p>
+                        Choose your garment's primary and secondary fabrics from
+                        our database.
+                    </p>
+                </div>
+                <div class="step fade-up stagger-2">
+                    <div class="step-num">02</div>
+                    <h3>Add Details</h3>
+                    <p>
+                        Enter the country of manufacture, certifications, and
+                        care instructions.
+                    </p>
+                </div>
+                <div class="step fade-up stagger-3">
+                    <div class="step-num">03</div>
+                    <h3>Get Score</h3>
+                    <p>
+                        Receive an instant impact score with a breakdown of CO₂,
+                        water, and toxicity.
+                    </p>
+                </div>
+                <div class="step fade-up stagger-4">
+                    <div class="step-num">04</div>
+                    <h3>Take Action</h3>
+                    <p>
+                        Get personalised suggestions to reduce your impact and
+                        find better alternatives.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="section" style="padding-top: 0">
+            <div class="section-header fade-up">
+                <span class="section-tag">💬 People Love It</span>
+                <h2 class="section-title">What our users say</h2>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial fade-up stagger-1">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>
+                        "I had no idea my favourite cashmere sweater had such a
+                        massive footprint. EcoFit completely changed how I
+                        shop."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👩</div>
+                        <div>
+                            <div class="author-name">Priya Sharma</div>
+                            <div class="author-role">
+                                Sustainable Fashion Blogger
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial fade-up stagger-2">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>
+                        "The materials library is incredibly detailed. I use it
+                        every time I go thrift shopping to make better
+                        decisions."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👨</div>
+                        <div>
+                            <div class="author-name">James Okonkwo</div>
+                            <div class="author-role">
+                                Eco Lifestyle Enthusiast
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial fade-up stagger-3">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>
+                        "Finally a tool that makes sustainability approachable.
+                        My class uses EcoFit for our environmental studies
+                        project."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👩‍🏫</div>
+                        <div>
+                            <div class="author-name">Dr. Anita Krishnan</div>
+                            <div class="author-role">
+                                Environmental Studies Lecturer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA BANNER -->
+        <div class="section" style="padding-top: 0">
+            <div class="cta-banner fade-up">
+                <div class="cta-banner-content">
+                    <h2>Ready to know your wardrobe's true cost?</h2>
+                    <p>
+                        Join thousands making more conscious fashion choices. It
+                        starts with a single scan.
+                    </p>
+                    <a
+                        href="calculator.html"
+                        class="btn btn-primary btn-lg"
+                        style="
+                            background: linear-gradient(
+                                135deg,
+                                var(--celadon-300),
+                                var(--celadon-500)
+                            );
+                            color: var(--text-dark);
+                        "
+                    >
+                        🌿 Start Your Free Assessment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">🌿 EcoFit</div>
+                    <p>
+                        Helping fashion lovers make choices that are good for
+                        their style and the planet. One garment at a time.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Tools</h4>
+                    <ul>
+                        <li><a href="calculator.html">Impact Calculator</a></li>
+                        <li><a href="wardrobe.html">Wardrobe Tracker</a></li>
+                        <li><a href="materials.html">Materials Library</a></li>
+                        <li><a href="tips.html">Eco Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Learn</h4>
+                    <ul>
+                        <li><a href="materials.html">Fabric Guide</a></li>
+                        <li>
+                            <a href="tips.html#certifications"
+                                >Certifications</a
+                            >
+                        </li>
+                        <li><a href="tips.html#washing">Care Tips</a></li>
+                        <li><a href="tips.html#brands">Brands</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="#">Our Mission</a></li>
+                        <li><a href="#">Data Sources</a></li>
+                        <li><a href="#">Methodology</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 EcoFit. Made with 💚 for the planet.</span>
+                <span
+                    >Data sourced from Higg Index, Textile Exchange & EU Fashion
+                    Sustainability Reports.</span
+                >
+            </div>
+        </footer>
+
+        <script>
+            // EcoFit — master bundle (also embedded in *.html). Edit this file, then run sync-ecofit-into-html.ps1 to refresh pages.
+
+            // EcoFit — material library (embedded; works offline).
+            // Optional: materials.json overrides when fetch works (local server).
+            window.ECOFIT_MATERIALS = {
+                "cotton-conventional": {
+                    name: "Conventional Cotton",
+                    category: "Natural",
+                    co2: 5.9,
+                    water: 10000,
+                    score: 62,
+                    description:
+                        "Grown with synthetic pesticides and fertilisers; very thirsty (≈10,000 L/kg). Most common apparel fibre worldwide.",
+                    alternatives: ["cotton-organic", "hemp", "linen"],
+                },
+                "cotton-organic": {
+                    name: "Organic Cotton",
+                    category: "Natural",
+                    co2: 3.8,
+                    water: 7000,
+                    score: 35,
+                    description:
+                        "No synthetic pesticides; lower water and energy than conventional cotton; look for GOTS.",
+                    alternatives: ["hemp", "linen", "tencel"],
+                },
+                "recycled-cotton": {
+                    name: "Recycled Cotton",
+                    category: "Recycled",
+                    co2: 2.1,
+                    water: 800,
+                    score: 24,
+                    description:
+                        "Mechanically or chemically recycled from textile waste; saves water and avoids virgin farming.",
+                    alternatives: ["hemp", "linen"],
+                },
+                polyester: {
+                    name: "Polyester",
+                    category: "Synthetic",
+                    co2: 9.5,
+                    water: 125,
+                    score: 78,
+                    description:
+                        "Petroleum-based; energy-intensive; sheds microplastics in every wash.",
+                    alternatives: ["recycled-polyester", "tencel"],
+                },
+                "recycled-polyester": {
+                    name: "Recycled Polyester (rPET)",
+                    category: "Recycled",
+                    co2: 3.2,
+                    water: 100,
+                    score: 28,
+                    description:
+                        "Made from post-consumer bottles or textile waste; much lower footprint than virgin polyester.",
+                    alternatives: ["tencel", "hemp"],
+                },
+                nylon: {
+                    name: "Nylon (Polyamide)",
+                    category: "Synthetic",
+                    co2: 7.6,
+                    water: 200,
+                    score: 72,
+                    description:
+                        "High energy use; nitrous oxide from production; common in activewear and hosiery.",
+                    alternatives: ["recycled-nylon", "tencel"],
+                },
+                "recycled-nylon": {
+                    name: "Recycled Nylon",
+                    category: "Recycled",
+                    co2: 2.8,
+                    water: 180,
+                    score: 25,
+                    description:
+                        "Often from fishing nets or industrial scrap; strong performance with lower impact.",
+                    alternatives: ["tencel"],
+                },
+                elastane: {
+                    name: "Elastane / Spandex / Lycra®",
+                    category: "Synthetic",
+                    co2: 12.0,
+                    water: 150,
+                    score: 82,
+                    description:
+                        "Almost always blended in small %; fossil-based and hard to recycle at end of life.",
+                    alternatives: ["recycled-polyester"],
+                },
+                acrylic: {
+                    name: "Acrylic",
+                    category: "Synthetic",
+                    co2: 8.2,
+                    water: 200,
+                    score: 75,
+                    description:
+                        "Wool-like synthetic; energy-intensive; can release microfibres.",
+                    alternatives: ["recycled-wool", "wool"],
+                },
+                wool: {
+                    name: "Wool (Virgin)",
+                    category: "Animal",
+                    co2: 5.5,
+                    water: 170,
+                    score: 50,
+                    description:
+                        "Durable and biodegradable; methane from sheep is a major part of footprint.",
+                    alternatives: ["recycled-wool", "organic-wool"],
+                },
+                "organic-wool": {
+                    name: "Organic Wool",
+                    category: "Animal",
+                    co2: 4.2,
+                    water: 160,
+                    score: 38,
+                    description:
+                        "Pasture and animal welfare standards; fewer synthetic inputs than conventional wool.",
+                    alternatives: ["recycled-wool", "linen"],
+                },
+                "recycled-wool": {
+                    name: "Recycled Wool",
+                    category: "Recycled",
+                    co2: 1.8,
+                    water: 80,
+                    score: 18,
+                    description:
+                        "Reclaimed from pre- or post-consumer knitwear; excellent low-impact option.",
+                    alternatives: [],
+                },
+                "merino-wool": {
+                    name: "Merino Wool",
+                    category: "Animal",
+                    co2: 6.0,
+                    water: 180,
+                    score: 55,
+                    description:
+                        "Fine fibre for base layers; similar land and methane considerations as wool.",
+                    alternatives: ["recycled-wool", "tencel"],
+                },
+                cashmere: {
+                    name: "Cashmere",
+                    category: "Animal",
+                    co2: 105,
+                    water: 15000,
+                    score: 95,
+                    description:
+                        "Very high land use and degradation per kg; luxury staple with outsized impact.",
+                    alternatives: ["recycled-cashmere", "wool", "tencel"],
+                },
+                "recycled-cashmere": {
+                    name: "Recycled Cashmere",
+                    category: "Recycled",
+                    co2: 8.0,
+                    water: 1200,
+                    score: 42,
+                    description:
+                        "Blends of reclaimed cashmere fibres; far better than virgin cashmere.",
+                    alternatives: ["recycled-wool", "tencel"],
+                },
+                alpaca: {
+                    name: "Alpaca Fibre",
+                    category: "Animal",
+                    co2: 12.0,
+                    water: 800,
+                    score: 58,
+                    description:
+                        "Soft luxury fibre; lower methane per animal than sheep but still animal agriculture.",
+                    alternatives: ["recycled-wool", "tencel"],
+                },
+                mohair: {
+                    name: "Mohair",
+                    category: "Animal",
+                    co2: 9.0,
+                    water: 600,
+                    score: 60,
+                    description:
+                        "From angora goats; durable sheen; welfare and land use vary by farm.",
+                    alternatives: ["wool", "tencel"],
+                },
+                angora: {
+                    name: "Angora (Rabbit)",
+                    category: "Animal",
+                    co2: 7.0,
+                    water: 500,
+                    score: 52,
+                    description:
+                        "Very fine; ethical sourcing critical — many brands have phased out.",
+                    alternatives: ["wool", "tencel"],
+                },
+                silk: {
+                    name: "Silk",
+                    category: "Animal",
+                    co2: 35,
+                    water: 3800,
+                    score: 70,
+                    description:
+                        "Boiling cocoons uses energy and water; biodegradable and long-lasting.",
+                    alternatives: ["tencel", "cupro", "linen"],
+                },
+                "down-feather": {
+                    name: "Down & Feather",
+                    category: "Animal",
+                    co2: 18.0,
+                    water: 2500,
+                    score: 68,
+                    description:
+                        "Fill for jackets and bedding; traceability and live-plucking concerns matter.",
+                    alternatives: ["recycled-polyester", "recycled-wool"],
+                },
+                linen: {
+                    name: "Linen (Flax)",
+                    category: "Natural",
+                    co2: 1.7,
+                    water: 500,
+                    score: 20,
+                    description:
+                        "Flax needs little irrigation and few pesticides; strong and biodegradable.",
+                    alternatives: [],
+                },
+                hemp: {
+                    name: "Hemp",
+                    category: "Natural",
+                    co2: 0.9,
+                    water: 300,
+                    score: 12,
+                    description:
+                        "Fast-growing, low inputs; excellent for denim, tees, and blends.",
+                    alternatives: [],
+                },
+                ramie: {
+                    name: "Ramie",
+                    category: "Natural",
+                    co2: 2.2,
+                    water: 400,
+                    score: 22,
+                    description:
+                        "Bast fibre like linen; lustrous; processing can be chemical-heavy.",
+                    alternatives: ["linen", "hemp"],
+                },
+                jute: {
+                    name: "Jute",
+                    category: "Natural",
+                    co2: 1.1,
+                    water: 350,
+                    score: 15,
+                    description:
+                        "Coarse bast fibre; bags and linings; very low impact crop.",
+                    alternatives: ["hemp", "linen"],
+                },
+                tencel: {
+                    name: "TENCEL™ / Lyocell",
+                    category: "Semi-synthetic",
+                    co2: 2.0,
+                    water: 700,
+                    score: 22,
+                    description:
+                        "Wood pulp in closed-loop solvent recovery; soft drape, biodegradable.",
+                    alternatives: ["linen", "hemp"],
+                },
+                modal: {
+                    name: "Modal",
+                    category: "Semi-synthetic",
+                    co2: 2.8,
+                    water: 900,
+                    score: 32,
+                    description:
+                        "Regenerated cellulose like viscose; often from beech; check responsible forestry.",
+                    alternatives: ["tencel", "linen"],
+                },
+                viscose: {
+                    name: "Viscose / Rayon",
+                    category: "Semi-synthetic",
+                    co2: 4.8,
+                    water: 3000,
+                    score: 55,
+                    description:
+                        "Wood pulp with chemical spinning; can drive deforestation if not certified.",
+                    alternatives: ["tencel", "modal", "linen"],
+                },
+                cupro: {
+                    name: "Cupro / Bemberg™",
+                    category: "Semi-synthetic",
+                    co2: 4.0,
+                    water: 2200,
+                    score: 48,
+                    description:
+                        "Regenerated from cotton linter; silk-like hand; chemical recovery matters.",
+                    alternatives: ["tencel", "silk"],
+                },
+                acetate: {
+                    name: "Acetate",
+                    category: "Semi-synthetic",
+                    co2: 4.5,
+                    water: 800,
+                    score: 50,
+                    description:
+                        "Lining fabric from wood pulp; less common in casual wear today.",
+                    alternatives: ["tencel"],
+                },
+                "bamboo-viscose": {
+                    name: "Bamboo Viscose",
+                    category: "Semi-synthetic",
+                    co2: 3.5,
+                    water: 1400,
+                    score: 40,
+                    description:
+                        "Often marketed as eco; chemically identical to rayon unless lyocell process.",
+                    alternatives: ["tencel", "hemp", "linen"],
+                },
+                bamboo: {
+                    name: "Bamboo (Generic)",
+                    category: "Semi-synthetic",
+                    co2: 2.5,
+                    water: 1200,
+                    score: 30,
+                    description:
+                        "Fast-growing grass; impact depends heavily on processing (viscose vs mechanical).",
+                    alternatives: ["hemp", "linen", "tencel"],
+                },
+                leather: {
+                    name: "Leather (Chrome Tan)",
+                    category: "Animal",
+                    co2: 17.0,
+                    water: 17100,
+                    score: 88,
+                    description:
+                        "Livestock + tanning; very high water and chemical load; long-lived products help amortise.",
+                    alternatives: ["cork", "vegan-leather", "pinatex"],
+                },
+                "vegetable-tanned-leather": {
+                    name: "Vegetable-Tanned Leather",
+                    category: "Animal",
+                    co2: 14.0,
+                    water: 12000,
+                    score: 78,
+                    description:
+                        "Traditional tannins; avoids chrome but still livestock-intensive.",
+                    alternatives: ["cork", "pinatex"],
+                },
+                "vegan-leather": {
+                    name: "Vegan Leather (PU / PVC)",
+                    category: "Synthetic",
+                    co2: 7.2,
+                    water: 150,
+                    score: 65,
+                    description:
+                        "Plastic-based; lower than leather on some metrics but fossil-derived and hard to recycle.",
+                    alternatives: ["cork", "recycled-polyester", "pinatex"],
+                },
+                pinatex: {
+                    name: "Piñatex® (Pineapple Leaf)",
+                    category: "Natural",
+                    co2: 2.4,
+                    water: 400,
+                    score: 28,
+                    description:
+                        "Uses agricultural waste from pineapples; bio-based coating options exist.",
+                    alternatives: ["cork", "vegan-leather"],
+                },
+                cork: {
+                    name: "Cork Fabric",
+                    category: "Natural",
+                    co2: 0.5,
+                    water: 100,
+                    score: 8,
+                    description:
+                        "Harvested from bark without killing trees; carbon-negative cork oak landscapes.",
+                    alternatives: [],
+                },
+                "rubber-natural": {
+                    name: "Natural Rubber",
+                    category: "Natural",
+                    co2: 2.0,
+                    water: 400,
+                    score: 35,
+                    description:
+                        "Soles and elastic; from latex trees; deforestation risk if not responsibly sourced.",
+                    alternatives: ["recycled-rubber"],
+                },
+                "recycled-rubber": {
+                    name: "Recycled Rubber",
+                    category: "Recycled",
+                    co2: 1.0,
+                    water: 100,
+                    score: 20,
+                    description:
+                        "Tyre and post-industrial scrap for soles and mats.",
+                    alternatives: [],
+                },
+                neoprene: {
+                    name: "Neoprene",
+                    category: "Synthetic",
+                    co2: 11.0,
+                    water: 200,
+                    score: 80,
+                    description:
+                        "Wetsuits and structured garments; synthetic rubber, high embodied energy.",
+                    alternatives: ["recycled-polyester"],
+                },
+                pvc: {
+                    name: "PVC / Vinyl",
+                    category: "Synthetic",
+                    co2: 6.5,
+                    water: 100,
+                    score: 85,
+                    description:
+                        "Coatings, shiny fashion, rainwear; chlorine chemistry and plasticisers are concerns.",
+                    alternatives: [
+                        "recycled-polyester",
+                        "polyurethane-coating",
+                    ],
+                },
+                "polyurethane-coating": {
+                    name: "Polyurethane (PU) Coating",
+                    category: "Synthetic",
+                    co2: 5.5,
+                    water: 120,
+                    score: 58,
+                    description:
+                        "Waterproof layers on jackets; thinner than full PVC in many cases.",
+                    alternatives: ["recycled-polyester"],
+                },
+                "fleece-polyester": {
+                    name: "Polar Fleece (Polyester)",
+                    category: "Synthetic",
+                    co2: 8.8,
+                    water: 130,
+                    score: 76,
+                    description:
+                        "Warm mid-layers; high microfibre shed — wash in a bag and prefer recycled content.",
+                    alternatives: ["recycled-polyester", "wool"],
+                },
+                "sequin-metallic": {
+                    name: "Sequins / Metallic Films",
+                    category: "Synthetic",
+                    co2: 10.0,
+                    water: 300,
+                    score: 88,
+                    description:
+                        "PET or metalised plastic on mesh; hard to recycle and sheds particles.",
+                    alternatives: ["recycled-polyester"],
+                },
+            };
+
+            // EcoFit — app logic (calculator, wardrobe, nav).
+            if (typeof window.ECOFIT_MATERIALS === "undefined")
+                window.ECOFIT_MATERIALS = {};
+
+            function showToast(message, type = "success", duration = 3000) {
+                let container = document.querySelector(".toast-container");
+                if (!container) {
+                    container = document.createElement("div");
+                    container.className = "toast-container";
+                    document.body.appendChild(container);
+                }
+                const icons = {
+                    success: "✅",
+                    warning: "⚠️",
+                    error: "❌",
+                    info: "ℹ️",
+                };
+                const toast = document.createElement("div");
+                toast.className = "toast";
+                toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.animation = "toastIn 0.3s reverse";
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+
+            function animateNumber(el, start, end, duration = 1500) {
+                const startTime = performance.now();
+                const update = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.round(start + (end - start) * eased);
+                    el.textContent = current.toLocaleString();
+                    if (progress < 1) requestAnimationFrame(update);
+                };
+                requestAnimationFrame(update);
+            }
+
+            function fillProgressBar(barEl, percent, delay = 0) {
+                setTimeout(() => {
+                    barEl.style.width = Math.min(percent, 100) + "%";
+                }, delay);
+            }
+
+            function getImpactLevel(score) {
+                if (score < 33)
+                    return {
+                        level: "Low",
+                        color: "good",
+                        emoji: "🌿",
+                        class: "impact-low",
+                    };
+                if (score < 66)
+                    return {
+                        level: "Medium",
+                        color: "warn",
+                        emoji: "⚡",
+                        class: "impact-medium",
+                    };
+                return {
+                    level: "High",
+                    color: "danger",
+                    emoji: "🔥",
+                    class: "impact-high",
+                };
+            }
+
+            let MaterialDB = window.ECOFIT_MATERIALS;
+
+            function loadMaterialsFromPage() {
+                MaterialDB = window.ECOFIT_MATERIALS || MaterialDB;
+            }
+
+            /** When served over http(s), overlays data from materials.json in the same folder. file:// often cannot fetch; embedded data remains. */
+            async function tryLoadMaterialsFromJson() {
+                try {
+                    const res = await fetch(
+                        new URL("materials.json", window.location.href),
+                        { cache: "no-store" },
+                    );
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    if (
+                        !data ||
+                        typeof data !== "object" ||
+                        Array.isArray(data)
+                    )
+                        return;
+                    if (Object.keys(data).length === 0) return;
+                    window.ECOFIT_MATERIALS = data;
+                    MaterialDB = data;
+                } catch (_) {
+                    /* keep embedded library */
+                }
+            }
+
+            const countryModifiers = {
+                Bangladesh: 1.3,
+                China: 1.1,
+                India: 1.05,
+                Vietnam: 1.2,
+                Portugal: 0.85,
+                Germany: 0.8,
+                USA: 0.9,
+                Italy: 0.88,
+                Japan: 0.82,
+                UK: 0.85,
+                Local: 0.7,
+                Unknown: 1.15,
+            };
+
+            const certifications = {
+                GOTS: {
+                    name: "GOTS Certified",
+                    discount: 0.2,
+                    color: "#3a8c5c",
+                },
+                "Fair-Trade": {
+                    name: "Fair Trade",
+                    discount: 0.15,
+                    color: "#5ab87a",
+                },
+                "B-Corp": { name: "B Corp", discount: 0.1, color: "#4fb492" },
+                "Oeko-Tex": {
+                    name: "OEKO-TEX®",
+                    discount: 0.12,
+                    color: "#6aad8c",
+                },
+                bluesign: {
+                    name: "bluesign®",
+                    discount: 0.18,
+                    color: "#2e9a79",
+                },
+                None: {
+                    name: "No Certification",
+                    discount: 0,
+                    color: "#c05c5c",
+                },
+            };
+
+            const WardrobeDB = {
+                key: "ecofit_wardrobe",
+                _cache: null,
+
+                getAll() {
+                    if (this._cache !== null) return this._cache;
+                    try {
+                        this._cache =
+                            JSON.parse(localStorage.getItem(this.key)) || [];
+                    } catch {
+                        this._cache = [];
+                    }
+                    return this._cache;
+                },
+
+                _setCache(items) {
+                    this._cache = items;
+                    try {
+                        localStorage.setItem(this.key, JSON.stringify(items));
+                    } catch (_) {}
+                },
+
+                async hydrate() {
+                    this._cache = null;
+                    this._cache = this.getAll();
+                },
+
+                async add(item) {
+                    const items = [...this.getAll()];
+                    const payload = { ...item };
+                    delete payload.id;
+                    delete payload.dateAdded;
+                    payload.id = Date.now() + Math.floor(Math.random() * 1000);
+                    payload.dateAdded = new Date().toISOString();
+                    items.push(payload);
+                    this._setCache(items);
+                    return payload;
+                },
+
+                async remove(id) {
+                    const items = this.getAll().filter(
+                        (i) => String(i.id) !== String(id),
+                    );
+                    this._setCache(items);
+                },
+
+                async clear() {
+                    this._setCache([]);
+                    localStorage.removeItem(this.key);
+                },
+
+                async addMany(newItems) {
+                    const items = [...this.getAll()];
+                    newItems.forEach((row) => {
+                        const copy = {
+                            ...row,
+                            id: Date.now() + Math.random(),
+                            dateAdded: new Date().toISOString(),
+                        };
+                        items.push(copy);
+                    });
+                    this._setCache(items);
+                    return items;
+                },
+
+                getStats() {
+                    const items = this.getAll();
+                    if (!items.length)
+                        return { total: 0, avgScore: 0, topMaterial: "None" };
+                    const avgScore = Math.round(
+                        items.reduce((s, i) => s + i.impactScore, 0) /
+                            items.length,
+                    );
+                    const materialCount = {};
+                    items.forEach((i) => {
+                        materialCount[i.material] =
+                            (materialCount[i.material] || 0) + 1;
+                    });
+                    const topMaterial =
+                        Object.entries(materialCount).sort(
+                            (a, b) => b[1] - a[1],
+                        )[0]?.[0] || "None";
+                    return { total: items.length, avgScore, topMaterial };
+                },
+            };
+
+            window.EcoFit = {
+                showToast,
+                animateNumber,
+                fillProgressBar,
+                getImpactLevel,
+                WardrobeDB,
+                MaterialDB,
+                countryModifiers,
+                certifications,
+                ready: null,
+            };
+
+            window.EcoFit.ready = (async () => {
+                try {
+                    await tryLoadMaterialsFromJson();
+                } catch (e) {
+                    console.warn("EcoFit: materials.json", e);
+                }
+                try {
+                    loadMaterialsFromPage();
+                } catch (e) {
+                    console.warn("EcoFit: loadMaterialsFromPage", e);
+                }
+                try {
+                    await WardrobeDB.hydrate();
+                } catch (e) {
+                    console.warn("EcoFit: wardrobe hydrate", e);
+                }
+                try {
+                    window.EcoFit.MaterialDB = MaterialDB;
+                    window.dispatchEvent(new CustomEvent("ecofit-ready"));
+                } catch (e) {
+                    console.warn("EcoFit: finish init", e);
+                }
+            })();
+
+            try {
+                const navbar = document.querySelector(".navbar");
+                if (navbar) {
+                    window.addEventListener("scroll", () => {
+                        if (window.scrollY > 50)
+                            navbar.classList.add("scrolled");
+                        else navbar.classList.remove("scrolled");
+                    });
+                }
+            } catch (e) {
+                console.warn("EcoFit navbar", e);
+            }
+
+            try {
+                const hamburger = document.querySelector(".hamburger");
+                const navLinks = document.querySelector(".nav-links");
+                if (hamburger && navLinks) {
+                    hamburger.addEventListener("click", () => {
+                        navLinks.classList.toggle("open");
+                        hamburger.classList.toggle("active");
+                    });
+                }
+            } catch (e) {
+                console.warn("EcoFit hamburger", e);
+            }
+
+            try {
+                const observerOptions = {
+                    threshold: 0.15,
+                    rootMargin: "0px 0px -40px 0px",
+                };
+                const fadeObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                            fadeObserver.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+                document
+                    .querySelectorAll(".fade-up")
+                    .forEach((el) => fadeObserver.observe(el));
+            } catch (e) {
+                document
+                    .querySelectorAll(".fade-up")
+                    .forEach((el) => el.classList.add("visible"));
+            }
+
+            try {
+                let page = (window.location.pathname || "").replace(/\\/g, "/");
+                page = page.split("/").pop() || "index.html";
+                if (!page.includes(".")) page = "index.html";
+                document.querySelectorAll(".nav-links a").forEach((link) => {
+                    const href = link.getAttribute("href") || "";
+                    const name = href.split("/").pop().split("?")[0];
+                    if (name && name === page) link.classList.add("active");
+                });
+            } catch (e) {
+                console.warn("EcoFit nav active", e);
+            }
+        </script>
+    </body>
+</html>

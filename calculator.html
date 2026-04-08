@@ -1,0 +1,1728 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Impact Calculator — EcoFit</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>"
+        />
+        <style>
+            .calc-hero {
+                padding: 140px 48px 60px;
+                text-align: center;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            /* === Two Panel Layout === */
+            .calc-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 48px 80px;
+            }
+
+            .calc-panel {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(172, 224, 201, 0.4);
+                border-radius: 28px;
+                padding: 36px;
+                box-shadow: var(--shadow-md);
+            }
+
+            .panel-title {
+                font-family: "Playfair Display", serif;
+                font-size: 22px;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .panel-subtitle {
+                font-size: 14px;
+                color: var(--text-light);
+                margin-bottom: 28px;
+            }
+
+            /* === Material Selector === */
+            .material-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                margin-bottom: 20px;
+                max-height: 280px;
+                overflow-y: auto;
+                padding-right: 4px;
+            }
+
+            .material-grid::-webkit-scrollbar {
+                width: 4px;
+            }
+            .material-grid::-webkit-scrollbar-thumb {
+                background: var(--celadon-300);
+                border-radius: 2px;
+            }
+
+            .mat-chip {
+                padding: 10px 8px;
+                border: 2px solid rgba(172, 224, 201, 0.4);
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: var(--spring);
+                text-align: center;
+                background: rgba(255, 255, 255, 0.6);
+                color: var(--text-mid);
+                line-height: 1.3;
+            }
+
+            .mat-chip:hover {
+                border-color: var(--celadon-400);
+                background: rgba(172, 224, 201, 0.2);
+                transform: scale(1.03);
+            }
+
+            .mat-chip.selected {
+                border-color: var(--celadon-500);
+                background: linear-gradient(
+                    135deg,
+                    rgba(172, 224, 201, 0.4),
+                    rgba(172, 224, 201, 0.2)
+                );
+                color: var(--celadon-700);
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(46, 154, 121, 0.2);
+            }
+
+            /* === Result Panel === */
+            .result-score-ring {
+                position: relative;
+                width: 180px;
+                height: 180px;
+                margin: 0 auto 28px;
+            }
+
+            .result-score-ring svg {
+                transform: rotate(-90deg);
+            }
+
+            .result-score-text {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .score-big {
+                font-family: "Playfair Display", serif;
+                font-size: 52px;
+                font-weight: 900;
+                line-height: 1;
+            }
+
+            .score-label {
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 4px;
+            }
+
+            /* === Metric Cards === */
+            .metric-row {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+
+            .metric-item {
+                background: rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(172, 224, 201, 0.3);
+                border-radius: 14px;
+                padding: 14px 12px;
+                text-align: center;
+            }
+
+            .metric-icon {
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+            .metric-value {
+                font-family: "Space Mono", monospace;
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--celadon-700);
+            }
+            .metric-label {
+                font-size: 10px;
+                color: var(--text-light);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 2px;
+            }
+
+            /* === Breakdown Bars === */
+            .breakdown-item {
+                margin-bottom: 16px;
+            }
+
+            .breakdown-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 6px;
+                font-size: 13px;
+            }
+
+            .breakdown-name {
+                font-weight: 600;
+                color: var(--text-mid);
+            }
+            .breakdown-pct {
+                font-weight: 700;
+                color: var(--text-dark);
+            }
+
+            .breakdown-bar {
+                height: 8px;
+                background: rgba(172, 224, 201, 0.2);
+                border-radius: 4px;
+                overflow: hidden;
+            }
+
+            .breakdown-fill {
+                height: 100%;
+                border-radius: 4px;
+                transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            /* === Alternatives === */
+            .alt-card {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 16px;
+                background: rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(172, 224, 201, 0.4);
+                border-radius: 14px;
+                margin-bottom: 10px;
+                transition: var(--spring);
+                cursor: pointer;
+            }
+
+            .alt-card:hover {
+                transform: translateX(4px);
+                background: rgba(172, 224, 201, 0.2);
+                border-color: var(--celadon-400);
+            }
+
+            .alt-icon {
+                font-size: 24px;
+            }
+
+            .alt-info {
+                flex: 1;
+            }
+            .alt-name {
+                font-weight: 600;
+                font-size: 14px;
+                color: var(--text-dark);
+            }
+            .alt-desc {
+                font-size: 12px;
+                color: var(--text-light);
+            }
+
+            .alt-score {
+                font-family: "Space Mono", monospace;
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            /* === Empty State === */
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+            }
+
+            .empty-icon {
+                font-size: 64px;
+                margin-bottom: 16px;
+            }
+            .empty-title {
+                font-family: "Playfair Display", serif;
+                font-size: 22px;
+                color: var(--text-mid);
+                margin-bottom: 8px;
+            }
+            .empty-desc {
+                font-size: 14px;
+                color: var(--text-light);
+            }
+
+            /* === Save Button === */
+            .save-section {
+                padding-top: 20px;
+                border-top: 1px solid rgba(172, 224, 201, 0.4);
+                display: flex;
+                gap: 10px;
+            }
+
+            /* === Country flags === */
+            .country-flag {
+                margin-right: 6px;
+            }
+
+            @media (max-width: 900px) {
+                .calc-layout {
+                    grid-template-columns: 1fr;
+                    padding: 0 20px 60px;
+                }
+                .material-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                    max-height: none;
+                }
+                .calc-hero {
+                    padding: 120px 20px 40px;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .material-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                .metric-row {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-bg"></div>
+
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">
+                <div class="nav-logo-icon">🌿</div>
+                <span class="nav-logo-text">Eco<span>Fit</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="calculator.html" class="active">Calculator</a></li>
+                <li><a href="wardrobe.html">My Wardrobe</a></li>
+                <li><a href="materials.html">Materials</a></li>
+                <li><a href="tips.html">Eco Tips</a></li>
+                <li>
+                    <a href="calculator.html" class="nav-cta"
+                        >Start Assessing →</a
+                    >
+                </li>
+            </ul>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </nav>
+
+        <div class="calc-hero page-transition">
+            <span class="section-tag">🔍 Impact Calculator</span>
+            <h1 class="section-title" style="margin-top: 16px">
+                Assess any garment's<br /><em>environmental footprint</em>
+            </h1>
+            <p class="section-subtitle">
+                Fill in the details below to get a comprehensive impact score
+                for your clothing item.
+            </p>
+        </div>
+
+        <div class="calc-layout">
+            <!-- INPUT PANEL -->
+            <div class="calc-panel">
+                <div class="panel-title">🧵 Garment Details</div>
+                <p class="panel-subtitle">
+                    Choose your item's fabric, origin, and other factors.
+                </p>
+
+                <!-- Garment Name -->
+                <div class="form-group">
+                    <label>Garment Name</label>
+                    <input
+                        type="text"
+                        id="garmentName"
+                        placeholder="e.g. Summer Dress, Wool Coat..."
+                    />
+                </div>
+
+                <!-- Garment Type -->
+                <div class="form-group">
+                    <label>Garment Type</label>
+                    <select id="garmentType">
+                        <option value="top">👕 Top / T-Shirt</option>
+                        <option value="pants">👖 Pants / Jeans</option>
+                        <option value="dress">👗 Dress / Skirt</option>
+                        <option value="jacket">🧥 Jacket / Coat</option>
+                        <option value="shoes">👟 Shoes / Footwear</option>
+                        <option value="accessories">🧣 Accessories</option>
+                        <option value="underwear">🩲 Underwear / Socks</option>
+                        <option value="sportswear">🏃 Sportswear</option>
+                    </select>
+                </div>
+
+                <!-- Primary Material -->
+                <div class="form-group">
+                    <label
+                        >Primary Material
+                        <span style="color: var(--danger)">*</span></label
+                    >
+                    <div class="material-grid" id="materialGrid"></div>
+                </div>
+
+                <!-- Secondary Material -->
+                <div class="form-group">
+                    <label>Secondary Material (if blended)</label>
+                    <select id="secondaryMaterial">
+                        <option value="none">None (Single material)</option>
+                        <option value="cotton-conventional">
+                            Conventional Cotton
+                        </option>
+                        <option value="cotton-organic">Organic Cotton</option>
+                        <option value="polyester">Polyester</option>
+                        <option value="recycled-polyester">
+                            Recycled Polyester
+                        </option>
+                        <option value="elastane">Elastane/Spandex</option>
+                        <option value="nylon">Nylon</option>
+                        <option value="wool">Wool</option>
+                        <option value="linen">Linen</option>
+                        <option value="viscose">Viscose/Rayon</option>
+                    </select>
+                </div>
+
+                <!-- Country of Origin -->
+                <div class="form-group">
+                    <label>Country of Manufacture</label>
+                    <select id="countryOrigin">
+                        <option value="Bangladesh">🇧🇩 Bangladesh</option>
+                        <option value="China">🇨🇳 China</option>
+                        <option value="India">🇮🇳 India</option>
+                        <option value="Vietnam">🇻🇳 Vietnam</option>
+                        <option value="Portugal">🇵🇹 Portugal</option>
+                        <option value="Germany">🇩🇪 Germany</option>
+                        <option value="Italy">🇮🇹 Italy</option>
+                        <option value="USA">🇺🇸 USA</option>
+                        <option value="Japan">🇯🇵 Japan</option>
+                        <option value="UK">🇬🇧 UK</option>
+                        <option value="Local">🏡 Local/Handmade</option>
+                        <option value="Unknown">❓ Unknown</option>
+                    </select>
+                </div>
+
+                <!-- Certification -->
+                <div class="form-group">
+                    <label>Brand Certification</label>
+                    <select id="certification">
+                        <option value="None">No Certification</option>
+                        <option value="GOTS">
+                            🌿 GOTS — Global Organic Textile Standard
+                        </option>
+                        <option value="Fair-Trade">
+                            🤝 Fair Trade Certified
+                        </option>
+                        <option value="B-Corp">🅱️ B Corp Certified</option>
+                        <option value="Oeko-Tex">
+                            🏷️ OEKO-TEX® Standard 100
+                        </option>
+                        <option value="bluesign">💧 bluesign® Approved</option>
+                    </select>
+                </div>
+
+                <!-- Care Habits -->
+                <div class="form-group">
+                    <label>Washing Frequency</label>
+                    <select id="washFreq">
+                        <option value="1">
+                            After every wear (high impact)
+                        </option>
+                        <option value="0.7" selected>
+                            Every 2–3 wears (moderate)
+                        </option>
+                        <option value="0.4">Every 5+ wears (low impact)</option>
+                        <option value="0.2">
+                            Rarely / spot clean (very low)
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Wash Temperature -->
+                <div class="form-group">
+                    <label>Wash Temperature</label>
+                    <select id="washTemp">
+                        <option value="1.3">60°C — Hot wash</option>
+                        <option value="1.0" selected>40°C — Warm wash</option>
+                        <option value="0.7">30°C — Cool wash</option>
+                        <option value="0.4">Cold wash</option>
+                    </select>
+                </div>
+
+                <!-- Expected Lifespan -->
+                <div class="form-group">
+                    <label>Expected Lifespan</label>
+                    <select id="lifespan">
+                        <option value="1.4">
+                            Less than 1 year (fast fashion)
+                        </option>
+                        <option value="1.0" selected>
+                            1–3 years (average)
+                        </option>
+                        <option value="0.7">3–5 years</option>
+                        <option value="0.4">5+ years (long-lasting)</option>
+                        <option value="0.2">
+                            Vintage / Second-hand (very low)
+                        </option>
+                    </select>
+                </div>
+
+                <button
+                    id="btnCalc"
+                    class="btn btn-primary btn-lg"
+                    style="width: 100%"
+                >
+                    Calculate Impact
+                </button>
+
+            </div>
+
+            <!-- RESULT PANEL -->
+            <div class="calc-panel" id="resultPanel">
+                <div class="panel-title">📊 Impact Results</div>
+                <p class="panel-subtitle">
+                    Select a material and click calculate to see results.
+                </p>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">🌿</div>
+                    <div class="empty-title">Ready to assess</div>
+                    <div class="empty-desc">
+                        Fill in the garment details on the left and click
+                        "Calculate Impact"
+                    </div>
+                </div>
+
+                <div id="resultContent" style="display: none">
+                    <!-- Score Ring -->
+                    <div class="result-score-ring">
+                        <svg width="180" height="180" viewBox="0 0 180 180">
+                            <circle
+                                cx="90"
+                                cy="90"
+                                r="76"
+                                fill="none"
+                                stroke="rgba(172,224,201,0.2)"
+                                stroke-width="14"
+                            />
+                            <circle
+                                cx="90"
+                                cy="90"
+                                r="76"
+                                fill="none"
+                                stroke="var(--celadon-400)"
+                                stroke-width="14"
+                                stroke-linecap="round"
+                                stroke-dasharray="477.5"
+                                id="scoreArc"
+                                stroke-dashoffset="477.5"
+                            />
+                        </svg>
+                        <div class="result-score-text">
+                            <span
+                                class="score-big"
+                                id="scoreBig"
+                                style="color: var(--celadon-500)"
+                                >—</span
+                            >
+                            <span class="score-label" id="scoreLabel"
+                                >Impact</span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Metrics -->
+                    <div class="metric-row">
+                        <div class="metric-item">
+                            <div class="metric-icon">💨</div>
+                            <div class="metric-value" id="metricCO2">—</div>
+                            <div class="metric-label">kg CO₂</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon">💧</div>
+                            <div class="metric-value" id="metricWater">—</div>
+                            <div class="metric-label">L Water</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon">☠️</div>
+                            <div class="metric-value" id="metricToxicity">
+                                —
+                            </div>
+                            <div class="metric-label">Toxicity</div>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown Bars -->
+                    <div style="margin-bottom: 24px">
+                        <div
+                            style="
+                                font-size: 13px;
+                                font-weight: 700;
+                                color: var(--text-mid);
+                                margin-bottom: 12px;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                            "
+                        >
+                            Impact Breakdown
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-header">
+                                <span class="breakdown-name"
+                                    >💨 Carbon Footprint</span
+                                >
+                                <span class="breakdown-pct" id="co2Pct"
+                                    >—%</span
+                                >
+                            </div>
+                            <div class="breakdown-bar">
+                                <div
+                                    class="breakdown-fill"
+                                    id="co2Bar"
+                                    style="
+                                        width: 0;
+                                        background: linear-gradient(
+                                            90deg,
+                                            var(--celadon-500),
+                                            var(--celadon-400)
+                                        );
+                                    "
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-header">
+                                <span class="breakdown-name"
+                                    >💧 Water Usage</span
+                                >
+                                <span class="breakdown-pct" id="waterPct"
+                                    >—%</span
+                                >
+                            </div>
+                            <div class="breakdown-bar">
+                                <div
+                                    class="breakdown-fill"
+                                    id="waterBar"
+                                    style="
+                                        width: 0;
+                                        background: linear-gradient(
+                                            90deg,
+                                            #4a9fd4,
+                                            #6ab8e8
+                                        );
+                                    "
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-header">
+                                <span class="breakdown-name"
+                                    >🏭 Manufacturing</span
+                                >
+                                <span class="breakdown-pct" id="mfgPct"
+                                    >—%</span
+                                >
+                            </div>
+                            <div class="breakdown-bar">
+                                <div
+                                    class="breakdown-fill"
+                                    id="mfgBar"
+                                    style="
+                                        width: 0;
+                                        background: linear-gradient(
+                                            90deg,
+                                            var(--warn),
+                                            #e8a050
+                                        );
+                                    "
+                                ></div>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-header">
+                                <span class="breakdown-name"
+                                    >🧺 Care & Washing</span
+                                >
+                                <span class="breakdown-pct" id="carePct"
+                                    >—%</span
+                                >
+                            </div>
+                            <div class="breakdown-bar">
+                                <div
+                                    class="breakdown-fill"
+                                    id="careBar"
+                                    style="
+                                        width: 0;
+                                        background: linear-gradient(
+                                            90deg,
+                                            #d47070,
+                                            #e89090
+                                        );
+                                    "
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Impact Badge -->
+                    <div
+                        id="impactBadge"
+                        style="
+                            text-align: center;
+                            padding: 16px;
+                            border-radius: 14px;
+                            margin-bottom: 20px;
+                        "
+                    ></div>
+
+                    <!-- Alternatives -->
+                    <div id="altSection">
+                        <div
+                            style="
+                                font-size: 13px;
+                                font-weight: 700;
+                                color: var(--text-mid);
+                                margin-bottom: 12px;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                            "
+                        >
+                            🌱 Better Alternatives
+                        </div>
+                        <div id="altList"></div>
+                    </div>
+
+                    <!-- Save -->
+                    <div class="save-section">
+                        <button
+                            class="btn btn-primary"
+                            style="flex: 1; justify-content: center"
+                            onclick="saveToWardrobe()"
+                        >
+                            💾 Save to Wardrobe
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetCalc()">
+                            ↺ Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">🌿 EcoFit</div>
+                    <p>
+                        Helping fashion lovers make choices that are good for
+                        their style and the planet.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Tools</h4>
+                    <ul>
+                        <li><a href="calculator.html">Impact Calculator</a></li>
+                        <li><a href="wardrobe.html">Wardrobe Tracker</a></li>
+                        <li><a href="materials.html">Materials Library</a></li>
+                        <li><a href="tips.html">Eco Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Learn</h4>
+                    <ul>
+                        <li><a href="materials.html">Fabric Guide</a></li>
+                        <li><a href="tips.html">Care Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="#">Our Mission</a></li>
+                        <li><a href="#">Data Sources</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2025 EcoFit. Made with 💚 for the planet.</span>
+                <span
+                    >Data sourced from Higg Index, Textile Exchange & EU
+                    Reports.</span
+                >
+            </div>
+        </footer>
+
+        <script>
+// EcoFit — master bundle (also embedded in *.html). Edit this file, then run sync-ecofit-into-html.ps1 to refresh pages.
+
+// EcoFit — material library (embedded; works offline).
+// Optional: materials.json overrides when fetch works (local server).
+window.ECOFIT_MATERIALS = {
+  "cotton-conventional": {
+    "name": "Conventional Cotton",
+    "category": "Natural",
+    "co2": 5.9,
+    "water": 10000,
+    "score": 62,
+    "description": "Grown with synthetic pesticides and fertilisers; very thirsty (≈10,000 L/kg). Most common apparel fibre worldwide.",
+    "alternatives": ["cotton-organic", "hemp", "linen"]
+  },
+  "cotton-organic": {
+    "name": "Organic Cotton",
+    "category": "Natural",
+    "co2": 3.8,
+    "water": 7000,
+    "score": 35,
+    "description": "No synthetic pesticides; lower water and energy than conventional cotton; look for GOTS.",
+    "alternatives": ["hemp", "linen", "tencel"]
+  },
+  "recycled-cotton": {
+    "name": "Recycled Cotton",
+    "category": "Recycled",
+    "co2": 2.1,
+    "water": 800,
+    "score": 24,
+    "description": "Mechanically or chemically recycled from textile waste; saves water and avoids virgin farming.",
+    "alternatives": ["hemp", "linen"]
+  },
+  "polyester": {
+    "name": "Polyester",
+    "category": "Synthetic",
+    "co2": 9.5,
+    "water": 125,
+    "score": 78,
+    "description": "Petroleum-based; energy-intensive; sheds microplastics in every wash.",
+    "alternatives": ["recycled-polyester", "tencel"]
+  },
+  "recycled-polyester": {
+    "name": "Recycled Polyester (rPET)",
+    "category": "Recycled",
+    "co2": 3.2,
+    "water": 100,
+    "score": 28,
+    "description": "Made from post-consumer bottles or textile waste; much lower footprint than virgin polyester.",
+    "alternatives": ["tencel", "hemp"]
+  },
+  "nylon": {
+    "name": "Nylon (Polyamide)",
+    "category": "Synthetic",
+    "co2": 7.6,
+    "water": 200,
+    "score": 72,
+    "description": "High energy use; nitrous oxide from production; common in activewear and hosiery.",
+    "alternatives": ["recycled-nylon", "tencel"]
+  },
+  "recycled-nylon": {
+    "name": "Recycled Nylon",
+    "category": "Recycled",
+    "co2": 2.8,
+    "water": 180,
+    "score": 25,
+    "description": "Often from fishing nets or industrial scrap; strong performance with lower impact.",
+    "alternatives": ["tencel"]
+  },
+  "elastane": {
+    "name": "Elastane / Spandex / Lycra®",
+    "category": "Synthetic",
+    "co2": 12.0,
+    "water": 150,
+    "score": 82,
+    "description": "Almost always blended in small %; fossil-based and hard to recycle at end of life.",
+    "alternatives": ["recycled-polyester"]
+  },
+  "acrylic": {
+    "name": "Acrylic",
+    "category": "Synthetic",
+    "co2": 8.2,
+    "water": 200,
+    "score": 75,
+    "description": "Wool-like synthetic; energy-intensive; can release microfibres.",
+    "alternatives": ["recycled-wool", "wool"]
+  },
+  "wool": {
+    "name": "Wool (Virgin)",
+    "category": "Animal",
+    "co2": 5.5,
+    "water": 170,
+    "score": 50,
+    "description": "Durable and biodegradable; methane from sheep is a major part of footprint.",
+    "alternatives": ["recycled-wool", "organic-wool"]
+  },
+  "organic-wool": {
+    "name": "Organic Wool",
+    "category": "Animal",
+    "co2": 4.2,
+    "water": 160,
+    "score": 38,
+    "description": "Pasture and animal welfare standards; fewer synthetic inputs than conventional wool.",
+    "alternatives": ["recycled-wool", "linen"]
+  },
+  "recycled-wool": {
+    "name": "Recycled Wool",
+    "category": "Recycled",
+    "co2": 1.8,
+    "water": 80,
+    "score": 18,
+    "description": "Reclaimed from pre- or post-consumer knitwear; excellent low-impact option.",
+    "alternatives": []
+  },
+  "merino-wool": {
+    "name": "Merino Wool",
+    "category": "Animal",
+    "co2": 6.0,
+    "water": 180,
+    "score": 55,
+    "description": "Fine fibre for base layers; similar land and methane considerations as wool.",
+    "alternatives": ["recycled-wool", "tencel"]
+  },
+  "cashmere": {
+    "name": "Cashmere",
+    "category": "Animal",
+    "co2": 105,
+    "water": 15000,
+    "score": 95,
+    "description": "Very high land use and degradation per kg; luxury staple with outsized impact.",
+    "alternatives": ["recycled-cashmere", "wool", "tencel"]
+  },
+  "recycled-cashmere": {
+    "name": "Recycled Cashmere",
+    "category": "Recycled",
+    "co2": 8.0,
+    "water": 1200,
+    "score": 42,
+    "description": "Blends of reclaimed cashmere fibres; far better than virgin cashmere.",
+    "alternatives": ["recycled-wool", "tencel"]
+  },
+  "alpaca": {
+    "name": "Alpaca Fibre",
+    "category": "Animal",
+    "co2": 12.0,
+    "water": 800,
+    "score": 58,
+    "description": "Soft luxury fibre; lower methane per animal than sheep but still animal agriculture.",
+    "alternatives": ["recycled-wool", "tencel"]
+  },
+  "mohair": {
+    "name": "Mohair",
+    "category": "Animal",
+    "co2": 9.0,
+    "water": 600,
+    "score": 60,
+    "description": "From angora goats; durable sheen; welfare and land use vary by farm.",
+    "alternatives": ["wool", "tencel"]
+  },
+  "angora": {
+    "name": "Angora (Rabbit)",
+    "category": "Animal",
+    "co2": 7.0,
+    "water": 500,
+    "score": 52,
+    "description": "Very fine; ethical sourcing critical — many brands have phased out.",
+    "alternatives": ["wool", "tencel"]
+  },
+  "silk": {
+    "name": "Silk",
+    "category": "Animal",
+    "co2": 35,
+    "water": 3800,
+    "score": 70,
+    "description": "Boiling cocoons uses energy and water; biodegradable and long-lasting.",
+    "alternatives": ["tencel", "cupro", "linen"]
+  },
+  "down-feather": {
+    "name": "Down & Feather",
+    "category": "Animal",
+    "co2": 18.0,
+    "water": 2500,
+    "score": 68,
+    "description": "Fill for jackets and bedding; traceability and live-plucking concerns matter.",
+    "alternatives": ["recycled-polyester", "recycled-wool"]
+  },
+  "linen": {
+    "name": "Linen (Flax)",
+    "category": "Natural",
+    "co2": 1.7,
+    "water": 500,
+    "score": 20,
+    "description": "Flax needs little irrigation and few pesticides; strong and biodegradable.",
+    "alternatives": []
+  },
+  "hemp": {
+    "name": "Hemp",
+    "category": "Natural",
+    "co2": 0.9,
+    "water": 300,
+    "score": 12,
+    "description": "Fast-growing, low inputs; excellent for denim, tees, and blends.",
+    "alternatives": []
+  },
+  "ramie": {
+    "name": "Ramie",
+    "category": "Natural",
+    "co2": 2.2,
+    "water": 400,
+    "score": 22,
+    "description": "Bast fibre like linen; lustrous; processing can be chemical-heavy.",
+    "alternatives": ["linen", "hemp"]
+  },
+  "jute": {
+    "name": "Jute",
+    "category": "Natural",
+    "co2": 1.1,
+    "water": 350,
+    "score": 15,
+    "description": "Coarse bast fibre; bags and linings; very low impact crop.",
+    "alternatives": ["hemp", "linen"]
+  },
+  "tencel": {
+    "name": "TENCEL™ / Lyocell",
+    "category": "Semi-synthetic",
+    "co2": 2.0,
+    "water": 700,
+    "score": 22,
+    "description": "Wood pulp in closed-loop solvent recovery; soft drape, biodegradable.",
+    "alternatives": ["linen", "hemp"]
+  },
+  "modal": {
+    "name": "Modal",
+    "category": "Semi-synthetic",
+    "co2": 2.8,
+    "water": 900,
+    "score": 32,
+    "description": "Regenerated cellulose like viscose; often from beech; check responsible forestry.",
+    "alternatives": ["tencel", "linen"]
+  },
+  "viscose": {
+    "name": "Viscose / Rayon",
+    "category": "Semi-synthetic",
+    "co2": 4.8,
+    "water": 3000,
+    "score": 55,
+    "description": "Wood pulp with chemical spinning; can drive deforestation if not certified.",
+    "alternatives": ["tencel", "modal", "linen"]
+  },
+  "cupro": {
+    "name": "Cupro / Bemberg™",
+    "category": "Semi-synthetic",
+    "co2": 4.0,
+    "water": 2200,
+    "score": 48,
+    "description": "Regenerated from cotton linter; silk-like hand; chemical recovery matters.",
+    "alternatives": ["tencel", "silk"]
+  },
+  "acetate": {
+    "name": "Acetate",
+    "category": "Semi-synthetic",
+    "co2": 4.5,
+    "water": 800,
+    "score": 50,
+    "description": "Lining fabric from wood pulp; less common in casual wear today.",
+    "alternatives": ["tencel"]
+  },
+  "bamboo-viscose": {
+    "name": "Bamboo Viscose",
+    "category": "Semi-synthetic",
+    "co2": 3.5,
+    "water": 1400,
+    "score": 40,
+    "description": "Often marketed as eco; chemically identical to rayon unless lyocell process.",
+    "alternatives": ["tencel", "hemp", "linen"]
+  },
+  "bamboo": {
+    "name": "Bamboo (Generic)",
+    "category": "Semi-synthetic",
+    "co2": 2.5,
+    "water": 1200,
+    "score": 30,
+    "description": "Fast-growing grass; impact depends heavily on processing (viscose vs mechanical).",
+    "alternatives": ["hemp", "linen", "tencel"]
+  },
+  "leather": {
+    "name": "Leather (Chrome Tan)",
+    "category": "Animal",
+    "co2": 17.0,
+    "water": 17100,
+    "score": 88,
+    "description": "Livestock + tanning; very high water and chemical load; long-lived products help amortise.",
+    "alternatives": ["cork", "vegan-leather", "pinatex"]
+  },
+  "vegetable-tanned-leather": {
+    "name": "Vegetable-Tanned Leather",
+    "category": "Animal",
+    "co2": 14.0,
+    "water": 12000,
+    "score": 78,
+    "description": "Traditional tannins; avoids chrome but still livestock-intensive.",
+    "alternatives": ["cork", "pinatex"]
+  },
+  "vegan-leather": {
+    "name": "Vegan Leather (PU / PVC)",
+    "category": "Synthetic",
+    "co2": 7.2,
+    "water": 150,
+    "score": 65,
+    "description": "Plastic-based; lower than leather on some metrics but fossil-derived and hard to recycle.",
+    "alternatives": ["cork", "recycled-polyester", "pinatex"]
+  },
+  "pinatex": {
+    "name": "Piñatex® (Pineapple Leaf)",
+    "category": "Natural",
+    "co2": 2.4,
+    "water": 400,
+    "score": 28,
+    "description": "Uses agricultural waste from pineapples; bio-based coating options exist.",
+    "alternatives": ["cork", "vegan-leather"]
+  },
+  "cork": {
+    "name": "Cork Fabric",
+    "category": "Natural",
+    "co2": 0.5,
+    "water": 100,
+    "score": 8,
+    "description": "Harvested from bark without killing trees; carbon-negative cork oak landscapes.",
+    "alternatives": []
+  },
+  "rubber-natural": {
+    "name": "Natural Rubber",
+    "category": "Natural",
+    "co2": 2.0,
+    "water": 400,
+    "score": 35,
+    "description": "Soles and elastic; from latex trees; deforestation risk if not responsibly sourced.",
+    "alternatives": ["recycled-rubber"]
+  },
+  "recycled-rubber": {
+    "name": "Recycled Rubber",
+    "category": "Recycled",
+    "co2": 1.0,
+    "water": 100,
+    "score": 20,
+    "description": "Tyre and post-industrial scrap for soles and mats.",
+    "alternatives": []
+  },
+  "neoprene": {
+    "name": "Neoprene",
+    "category": "Synthetic",
+    "co2": 11.0,
+    "water": 200,
+    "score": 80,
+    "description": "Wetsuits and structured garments; synthetic rubber, high embodied energy.",
+    "alternatives": ["recycled-polyester"]
+  },
+  "pvc": {
+    "name": "PVC / Vinyl",
+    "category": "Synthetic",
+    "co2": 6.5,
+    "water": 100,
+    "score": 85,
+    "description": "Coatings, shiny fashion, rainwear; chlorine chemistry and plasticisers are concerns.",
+    "alternatives": ["recycled-polyester", "polyurethane-coating"]
+  },
+  "polyurethane-coating": {
+    "name": "Polyurethane (PU) Coating",
+    "category": "Synthetic",
+    "co2": 5.5,
+    "water": 120,
+    "score": 58,
+    "description": "Waterproof layers on jackets; thinner than full PVC in many cases.",
+    "alternatives": ["recycled-polyester"]
+  },
+  "fleece-polyester": {
+    "name": "Polar Fleece (Polyester)",
+    "category": "Synthetic",
+    "co2": 8.8,
+    "water": 130,
+    "score": 76,
+    "description": "Warm mid-layers; high microfibre shed — wash in a bag and prefer recycled content.",
+    "alternatives": ["recycled-polyester", "wool"]
+  },
+  "sequin-metallic": {
+    "name": "Sequins / Metallic Films",
+    "category": "Synthetic",
+    "co2": 10.0,
+    "water": 300,
+    "score": 88,
+    "description": "PET or metalised plastic on mesh; hard to recycle and sheds particles.",
+    "alternatives": ["recycled-polyester"]
+  }
+};
+
+// EcoFit — app logic (calculator, wardrobe, nav).
+if (typeof window.ECOFIT_MATERIALS === 'undefined') window.ECOFIT_MATERIALS = {};
+
+function showToast(message, type = 'success', duration = 3000) {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  const icons = { success: '✅', warning: '⚠️', error: '❌', info: 'ℹ️' };
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastIn 0.3s reverse';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+function animateNumber(el, start, end, duration = 1500) {
+  const startTime = performance.now();
+  const update = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (end - start) * eased);
+    el.textContent = current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+function fillProgressBar(barEl, percent, delay = 0) {
+  setTimeout(() => { barEl.style.width = Math.min(percent, 100) + '%'; }, delay);
+}
+
+function getImpactLevel(score) {
+  if (score < 33) return { level: 'Low', color: 'good', emoji: '🌿', class: 'impact-low' };
+  if (score < 66) return { level: 'Medium', color: 'warn', emoji: '⚡', class: 'impact-medium' };
+  return { level: 'High', color: 'danger', emoji: '🔥', class: 'impact-high' };
+}
+
+let MaterialDB = window.ECOFIT_MATERIALS;
+
+function loadMaterialsFromPage() {
+  MaterialDB = window.ECOFIT_MATERIALS || MaterialDB;
+}
+
+/** When served over http(s), overlays data from materials.json in the same folder. file:// often cannot fetch; embedded data remains. */
+async function tryLoadMaterialsFromJson() {
+  try {
+    const res = await fetch(new URL('materials.json', window.location.href), { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return;
+    if (Object.keys(data).length === 0) return;
+    window.ECOFIT_MATERIALS = data;
+    MaterialDB = data;
+  } catch (_) {
+    /* keep embedded library */
+  }
+}
+
+const countryModifiers = {
+  Bangladesh: 1.3, China: 1.1, India: 1.05, Vietnam: 1.2, Portugal: 0.85,
+  Germany: 0.80, USA: 0.90, Italy: 0.88, Japan: 0.82, UK: 0.85, Local: 0.70, Unknown: 1.15
+};
+
+const certifications = {
+  GOTS: { name: 'GOTS Certified', discount: 0.20, color: '#3a8c5c' },
+  'Fair-Trade': { name: 'Fair Trade', discount: 0.15, color: '#5ab87a' },
+  'B-Corp': { name: 'B Corp', discount: 0.10, color: '#4fb492' },
+  Oeko_Tex: { name: 'OEKO_TEX®', discount: 0.12, color: '#6aad8c' },
+  bluesign: { name: 'bluesign®', discount: 0.18, color: '#2e9a79' },
+  None: { name: 'No Certification', discount: 0, color: '#c05c5c' }
+};
+
+const WardrobeDB = {
+  key: 'ecofit_wardrobe',
+  _cache: null,
+
+  getAll() {
+    if (this._cache !== null) return this._cache;
+    try {
+      this._cache = JSON.parse(localStorage.getItem(this.key)) || [];
+    } catch {
+      this._cache = [];
+    }
+    return this._cache;
+  },
+
+  _setCache(items) {
+    this._cache = items;
+    try {
+      localStorage.setItem(this.key, JSON.stringify(items));
+    } catch (_) {}
+  },
+
+  async hydrate() {
+    this._cache = null;
+    this._cache = this.getAll();
+  },
+
+  async add(item) {
+    const items = [...this.getAll()];
+    const payload = { ...item };
+    delete payload.id;
+    delete payload.dateAdded;
+    payload.id = Date.now() + Math.floor(Math.random() * 1000);
+    payload.dateAdded = new Date().toISOString();
+    items.push(payload);
+    this._setCache(items);
+    return payload;
+  },
+
+  async remove(id) {
+    const items = this.getAll().filter(i => String(i.id) !== String(id));
+    this._setCache(items);
+  },
+
+  async clear() {
+    this._setCache([]);
+    localStorage.removeItem(this.key);
+  },
+
+  async addMany(newItems) {
+    const items = [...this.getAll()];
+    newItems.forEach(row => {
+      const copy = { ...row, id: Date.now() + Math.random(), dateAdded: new Date().toISOString() };
+      items.push(copy);
+    });
+    this._setCache(items);
+    return items;
+  },
+
+  getStats() {
+    const items = this.getAll();
+    if (!items.length) return { total: 0, avgScore: 0, topMaterial: 'None' };
+    const avgScore = Math.round(items.reduce((s, i) => s + i.impactScore, 0) / items.length);
+    const materialCount = {};
+    items.forEach(i => { materialCount[i.material] = (materialCount[i.material] || 0) + 1; });
+    const topMaterial = Object.entries(materialCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None';
+    return { total: items.length, avgScore, topMaterial };
+  }
+};
+
+window.EcoFit = {
+  showToast,
+  animateNumber,
+  fillProgressBar,
+  getImpactLevel,
+  WardrobeDB,
+  MaterialDB,
+  countryModifiers,
+  certifications,
+  ready: null
+};
+
+window.EcoFit.ready = (async () => {
+  try {
+    await tryLoadMaterialsFromJson();
+  } catch (e) {
+    console.warn('EcoFit: materials.json', e);
+  }
+  try {
+    loadMaterialsFromPage();
+  } catch (e) {
+    console.warn('EcoFit: loadMaterialsFromPage', e);
+  }
+  try {
+    await WardrobeDB.hydrate();
+  } catch (e) {
+    console.warn('EcoFit: wardrobe hydrate', e);
+  }
+  try {
+    window.EcoFit.MaterialDB = MaterialDB;
+    window.dispatchEvent(new CustomEvent('ecofit-ready'));
+  } catch (e) {
+    console.warn('EcoFit: finish init', e);
+  }
+})();
+
+try {
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+  }
+} catch (e) { console.warn('EcoFit navbar', e); }
+
+try {
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      hamburger.classList.toggle('active');
+    });
+  }
+} catch (e) { console.warn('EcoFit hamburger', e); }
+
+try {
+  const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -40px 0px' };
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+} catch (e) {
+  document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+}
+
+try {
+  let page = (window.location.pathname || '').replace(/\\/g, '/');
+  page = page.split('/').pop() || 'index.html';
+  if (!page.includes('.')) page = 'index.html';
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    const href = link.getAttribute('href') || '';
+    const name = href.split('/').pop().split('?')[0];
+    if (name && name === page) link.classList.add('active');
+  });
+} catch (e) { console.warn('EcoFit nav active', e); }
+
+        </script>
+        <script>
+            (async () => {
+            try {
+            if (window.EcoFit && window.EcoFit.ready) {
+                await window.EcoFit.ready.catch(function (err) {
+                    console.warn("EcoFit ready:", err);
+                });
+            }
+            if (!window.EcoFit) {
+                throw new Error("ecofit.js did not run");
+            }
+
+            const {
+                MaterialDB,
+                countryModifiers,
+                certifications,
+                WardrobeDB,
+                showToast,
+                getImpactLevel,
+            } = window.EcoFit;
+
+            let selectedMaterial = null;
+
+            // Build Material Grid
+            const grid = document.getElementById("materialGrid");
+            if (!grid) return;
+            if (!MaterialDB || !Object.keys(MaterialDB).length) {
+                grid.innerHTML =
+                    '<p style="padding:14px;border-radius:12px;background:rgba(192,92,92,0.1);border:1px solid rgba(192,92,92,0.25);color:var(--danger);font-size:14px;line-height:1.55">No materials loaded. Ensure <strong>ecofit.js</strong> is in the same folder as this page. With a local server, <strong>materials.json</strong> can override the embedded library.</p>';
+                return;
+            }
+            const materialEmojis = {
+                "cotton-conventional": "🌾",
+                "cotton-organic": "🌱",
+                polyester: "🧴",
+                "recycled-polyester": "♻️",
+                nylon: "🧵",
+                "recycled-nylon": "♻️",
+                wool: "🐑",
+                "recycled-wool": "♻️",
+                linen: "🌿",
+                hemp: "🌿",
+                tencel: "🪴",
+                bamboo: "🎋",
+                leather: "🐄",
+                "vegan-leather": "🎭",
+                cork: "🍾",
+                viscose: "🌲",
+                cashmere: "🦙",
+                silk: "🐛",
+            };
+
+            Object.entries(MaterialDB).forEach(([key, mat]) => {
+                const chip = document.createElement("div");
+                chip.className = "mat-chip";
+                chip.dataset.key = key;
+                chip.innerHTML = `${materialEmojis[key] || "🧶"} ${String(mat.name || "").trim().split(/\s+/)[0] || "Material"}`;
+                chip.title = mat.name || key;
+                chip.addEventListener("click", () => {
+                    document
+                        .querySelectorAll(".mat-chip")
+                        .forEach((c) => c.classList.remove("selected"));
+                    chip.classList.add("selected");
+                    selectedMaterial = key;
+                });
+                grid.appendChild(chip);
+            });
+
+            let currentResult = null;
+
+            function calculateImpact() {
+                if (!selectedMaterial) {
+                    showToast(
+                        "Please select a primary material first!",
+                        "warning",
+                    );
+                    return;
+                }
+
+                const mat = MaterialDB[selectedMaterial];
+                const country = document.getElementById("countryOrigin").value;
+                const cert = document.getElementById("certification").value;
+                const washFreq = parseFloat(
+                    document.getElementById("washFreq").value,
+                );
+                const washTemp = parseFloat(
+                    document.getElementById("washTemp").value,
+                );
+                const lifespan = parseFloat(
+                    document.getElementById("lifespan").value,
+                );
+
+                const countryMod = countryModifiers[country] || 1.0;
+                const certDiscount = certifications[cert]?.discount || 0;
+
+                // Calculate score
+                let rawScore = mat.score;
+                rawScore *= countryMod;
+                rawScore *= 1 - certDiscount;
+                rawScore *= washFreq;
+                rawScore *= washTemp;
+                rawScore *= lifespan;
+
+                // Blend with secondary material
+                const secondary =
+                    document.getElementById("secondaryMaterial").value;
+                if (
+                    secondary &&
+                    secondary !== "none" &&
+                    MaterialDB[secondary]
+                ) {
+                    rawScore =
+                        rawScore * 0.7 + MaterialDB[secondary].score * 0.3;
+                }
+
+                const finalScore = Math.min(Math.round(rawScore), 100);
+                const co2 = (
+                    mat.co2 *
+                    countryMod *
+                    (1 - certDiscount * 0.5)
+                ).toFixed(1);
+                const water = Math.round(
+                    mat.water * countryMod * (1 - certDiscount * 0.3),
+                );
+
+                // Breakdown percentages
+                const co2Weight = 40;
+                const waterWeight = 35;
+                const mfgWeight = Math.round(countryMod * 15);
+                const careWeight = Math.round(washFreq * washTemp * 10);
+
+                const impact = getImpactLevel(finalScore);
+                currentResult = {
+                    garmentName:
+                        document.getElementById("garmentName").value ||
+                        "Unnamed Garment",
+                    garmentType: document.getElementById("garmentType").value,
+                    material: selectedMaterial,
+                    country,
+                    cert,
+                    impactScore: finalScore,
+                    co2,
+                    water,
+                };
+
+                // Show result
+                document.getElementById("emptyState").style.display = "none";
+                document.getElementById("resultContent").style.display =
+                    "block";
+
+                // Animate score
+                const scoreEl = document.getElementById("scoreBig");
+                let current = 0;
+                const target = finalScore;
+                const increment = target / 40;
+                const scoreColors = {
+                    low: "var(--good)",
+                    medium: "var(--warn)",
+                    high: "var(--danger)",
+                };
+                scoreEl.style.color = scoreColors[impact.level.toLowerCase()];
+                document.getElementById("scoreLabel").textContent =
+                    impact.level + " Impact";
+                document.getElementById("scoreLabel").style.color =
+                    scoreColors[impact.level.toLowerCase()];
+
+                const counter = setInterval(() => {
+                    current = Math.min(current + increment, target);
+                    scoreEl.textContent = Math.round(current);
+                    if (current >= target) clearInterval(counter);
+                }, 25);
+
+                // Arc animation
+                const arc = document.getElementById("scoreArc");
+                const circumference = 477.5;
+                const arcColors = {
+                    Low: "var(--good)",
+                    Medium: "var(--warn)",
+                    High: "var(--danger)",
+                };
+                arc.style.stroke =
+                    arcColors[impact.level] || "var(--celadon-400)";
+                setTimeout(() => {
+                    arc.style.transition =
+                        "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)";
+                    arc.style.strokeDashoffset =
+                        circumference - (finalScore / 100) * circumference;
+                }, 100);
+
+                // Metrics
+                document.getElementById("metricCO2").textContent = co2;
+                document.getElementById("metricWater").textContent =
+                    water.toLocaleString();
+                const toxLabels = {
+                    low: "Low",
+                    medium: "Medium",
+                    high: "High",
+                };
+                document.getElementById("metricToxicity").textContent =
+                    impact.level;
+
+                // Bars
+                const setPct = (id, barId, pct) => {
+                    document.getElementById(id).textContent = pct + "%";
+                    setTimeout(() => {
+                        document.getElementById(barId).style.width = pct + "%";
+                    }, 200);
+                };
+                setPct("co2Pct", "co2Bar", co2Weight);
+                setPct("waterPct", "waterBar", waterWeight);
+                setPct("mfgPct", "mfgBar", mfgWeight);
+                setPct("carePct", "careBar", Math.min(careWeight, 25));
+
+                // Badge
+                const badgeColors = {
+                    Low: "#e6f7ee",
+                    Medium: "#fff3e0",
+                    High: "#ffebeb",
+                };
+                const badgeText = {
+                    Low: "#2e7d32",
+                    Medium: "#e65100",
+                    High: "#b71c1c",
+                };
+                const badgeMessages = {
+                    Low: "🌿 Great choice! This garment has a relatively low environmental impact.",
+                    Medium: "⚡ Moderate impact. There's room for improvement — check the alternatives below.",
+                    High: "🔥 High impact. Consider eco-friendly alternatives to reduce your footprint significantly.",
+                };
+                const badge = document.getElementById("impactBadge");
+                badge.style.background = badgeColors[impact.level];
+                badge.style.color = badgeText[impact.level];
+                badge.style.border = `1px solid ${badgeText[impact.level]}30`;
+                badge.innerHTML = `<strong style="font-size:15px">${impact.emoji} ${impact.level} Environmental Impact (Score: ${finalScore}/100)</strong><br><span style="font-size:13px;margin-top:6px;display:block">${badgeMessages[impact.level]}</span>`;
+
+                // Alternatives
+                const altList = document.getElementById("altList");
+                altList.innerHTML = "";
+                const alts = mat.alternatives;
+                if (alts && alts.length > 0) {
+                    alts.forEach((altKey) => {
+                        const alt = MaterialDB[altKey];
+                        if (!alt) return;
+                        const altImpact = getImpactLevel(alt.score);
+                        const card = document.createElement("div");
+                        card.className = "alt-card";
+                        card.innerHTML = `
+            <div class="alt-icon">${materialEmojis[altKey] || "🌿"}</div>
+            <div class="alt-info">
+              <div class="alt-name">${alt.name}</div>
+              <div class="alt-desc">${alt.description}</div>
+            </div>
+            <span class="alt-score" style="color:${alt.score < 33 ? "var(--good)" : alt.score < 66 ? "var(--warn)" : "var(--danger)"}">${alt.score}</span>
+          `;
+                        card.onclick = () => {
+                            document
+                                .querySelectorAll(".mat-chip")
+                                .forEach((c) => c.classList.remove("selected"));
+                            const chip = document.querySelector(
+                                `[data-key="${altKey}"]`,
+                            );
+                            if (chip) {
+                                chip.classList.add("selected");
+                                selectedMaterial = altKey;
+                                chip.scrollIntoView({ block: "nearest" });
+                            }
+                            showToast(`Switched to ${alt.name}!`, "info");
+                        };
+                        altList.appendChild(card);
+                    });
+                } else {
+                    altList.innerHTML = `<div style="text-align:center;padding:20px;color:var(--good);font-weight:600">🏆 This material is already one of the best choices!</div>`;
+                }
+
+                document
+                    .getElementById("resultContent")
+                    .scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+
+            function saveToWardrobe() {
+                if (!currentResult) return;
+                WardrobeDB.add(currentResult);
+                showToast(
+                    `"${currentResult.garmentName}" saved to wardrobe!`,
+                    "success",
+                );
+            }
+
+            function resetCalc() {
+                selectedMaterial = null;
+                currentResult = null;
+                document
+                    .querySelectorAll(".mat-chip")
+                    .forEach((c) => c.classList.remove("selected"));
+                document.getElementById("garmentName").value = "";
+                document.getElementById("emptyState").style.display = "block";
+                document.getElementById("resultContent").style.display = "none";
+                document.getElementById("scoreArc").style.strokeDashoffset =
+                    "477.5";
+            }
+
+            document
+                .getElementById("btnCalc")
+                .addEventListener("click", () => calculateImpact());
+
+            window.saveToWardrobe = saveToWardrobe;
+            window.resetCalc = resetCalc;
+            } catch (e) {
+                console.error("EcoFit calculator:", e);
+                const g = document.getElementById("materialGrid");
+                if (g && !g.children.length) {
+                    const hint = !window.EcoFit
+                        ? "EcoFit code failed to run (rare). Try another browser or open the browser console (F12) for errors."
+                        : "Something went wrong during setup. Open the browser console (F12) for details.";
+                    g.innerHTML =
+                        '<p style="padding:14px;color:var(--danger);font-size:14px;line-height:1.5">' +
+                        hint +
+                        "</p>";
+                }
+            }
+            })();
+        </script>
+    </body>
+</html>
