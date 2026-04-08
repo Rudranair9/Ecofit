@@ -4,7 +4,7 @@ A beautiful, full-featured web application that helps users assess the environme
 
 ## 📋 Project Overview
 
-EcoWear is an educational tool designed for your web programming subject that demonstrates:
+Ecofit is an educational tool designed for your web programming subject that demonstrates:
 
 - **Interactive form handling** with real-time validation
 - **Complex environmental impact calculations** using multiple factors
@@ -45,7 +45,7 @@ EcoWear is an educational tool designed for your web programming subject that de
 ## 📁 File Structure
 
 ```
-EcoWear/
+Ecofit/
 ├── index.html      (12 KB) - Semantic HTML with form and results sections
 ├── style.css       (19 KB) - Complete styling with animations and responsive design
 ├── script.js       (16 KB) - Impact calculations and interactivity
@@ -57,7 +57,7 @@ EcoWear/
 ### Installation
 
 1. **Download** the three files (index.html, style.css, script.js)
-2. **Create a folder** named "EcoWear" on your computer
+2. **Create a folder** named "Ecofit" on your computer
 3. **Place all three files** in the same folder
 4. **Keep them together** - they must be in the same directory for links to work
 5. **No server needed** - runs entirely in the browser!
